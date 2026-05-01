@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EV Explorer — Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f0f1f4; --surface: #ffffff; --border: #dde0e8;
+      --purple: #7c3aed; --blue: #2563eb; --teal: #0d9488;
+      --text: #111827; --muted: #4b5563;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; }
+    header { background: var(--surface); padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); }
+    header h1 { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+    header p { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    nav { background: var(--surface); padding: 0.6rem 2.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 1.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+    nav a:hover { color: var(--purple); }
+    main { max-width: 820px; margin: 0 auto; padding: 3rem 2rem; }
+    section { margin-bottom: 3.5rem; }
+    h2 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--purple); margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin: 1.5rem 0 0.5rem; }
+    p { color: var(--muted); margin-bottom: 1rem; font-size: 0.92rem; line-height: 1.7; }
+    .video-embed { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; margin: 1rem 0; overflow: hidden; }
+    .video-embed iframe { width: 100%; height: 100%; border: none; }
+    .video-embed p { color: var(--muted); font-size: 0.8rem; }
+    .sketch-placeholder { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 2rem; text-align: center; margin: 1rem 0; color: var(--muted); font-size: 0.82rem; }
+    .design-choice { background: var(--surface); border-left: 3px solid var(--purple); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1rem 0; }
+    .design-choice .label { font-size: 0.68rem; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .design-choice p { margin: 0; font-size: 0.86rem; }
+    .insight-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1rem 0; }
+    .insight-card .num { font-size: 0.68rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
+    .insight-card h3 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+    .insight-card p { margin: 0; font-size: 0.86rem; }
+    .screenshot-placeholder { background: #f9fafb; border: 1px dashed var(--border); border-radius: 6px; padding: 1.5rem; text-align: center; margin: 0.75rem 0; color: var(--muted); font-size: 0.76rem; }
+    .back-link { display: inline-block; font-size: 0.75rem; color: var(--purple); text-decoration: none; border: 1px solid var(--purple); padding: 5px 14px; border-radius: 4px; margin-bottom: 2rem; }
+    .back-link:hover { background: var(--purple); color: #fff; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Who Leads the EV Market Over Time? — Documentation</h1>
+  <p>Design process, rationale, and insights · Washington State EV Data</p>
+</header>
+<nav>
+  <a href="index.html">← Live Visualization</a>
+  <a href="#video">Video</a>
+  <a href="#process">Design Process</a>
+  <a href="#rationale">Rationale</a>
+  <a href="#insights">Insights</a>
+</nav>
+<main>
+  <a href="index.html" class="back-link">← Back to Visualization</a>
+
+  <section id="video">
+    <h2>Video Demonstration</h2>
+    <p>A 2–4 minute walkthrough of the visualization demonstrating key interactions and findings.</p>
+    <div class="video-embed">
+      <!-- Replace with your YouTube embed URL after recording -->
+      <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+      <p>[ Paste your YouTube embed link here after recording ]</p>
+    </div>
+  </section>
+
+  <section id="process">
+    <h2>Design Process</h2>
+    <p>The central question driving this project was: <strong>Who leads the EV market in Washington State, and how has that changed over time?</strong> The dataset from the Washington State Department of Licensing contains over 200,000 electric vehicle registrations with attributes including make, model year, electric vehicle type (BEV vs PHEV), electric range, and location.</p>
+    <h3>Initial sketches</h3>
+    <p>I began by sketching several possible layouts on paper before settling on the final two-panel design.</p>
+    <div class="sketch-placeholder">[ Insert photo of hand-drawn sketches here ]</div>
+    <h3>Iterations</h3>
+    <p>My first idea included a scatter plot of electric range vs model year and a choropleth map by county. I removed the scatter plot to focus the narrative on market leadership and growth over time. The map required complex geographic data processing that would distract from the core question.</p>
+    <p>I also initially showed the bar chart by default with all years. After reflection I changed it to an empty state that requires the user to select a year range first — this makes the interaction explicit and teaches the user how the two charts are connected.</p>
+  </section>
+
+  <section id="rationale">
+    <h2>Design Rationale</h2>
+    <div class="design-choice">
+      <div class="label">Layout — Line chart left, bar chart right</div>
+      <p>Time-series data is the primary driver of the bar chart. Placing the line chart on the left and bar chart on the right follows the natural left-to-right reading flow, reinforcing that the left chart controls the right.</p>
+    </div>
+    <div class="design-choice">
+      <div class="label">Empty state on bar chart</div>
+      <p>The bar chart starts empty with a prompt to "Select a year range." This is intentional — it forces the user to interact with the line chart first, establishing the causal relationship between the two views before any data appears.</p>
+    </div>
+    <div class="design-choice">
+      <div class="label">Color — Purple for All, Teal for BEV, Blue for PHEV</div>
+      <p>Colors are semantically consistent: teal is associated with sustainability and pure electric vehicles (BEV), blue with partial electrification (PHEV), and purple as a neutral for the combined view. All UI elements (toggle buttons, bars, line) change color together to reinforce the active filter.</p>
+    </div>
+    <div class="design-choice">
+      <div class="label">Gradient on bars</div>
+      <p>Bars fade from full color at the top to 28% opacity at the bottom. This gradient reinforces the rank ordering — the eye naturally reads the top bar as most dominant — while reducing visual weight for lower-ranked brands.</p>
+    </div>
+    <div class="design-choice">
+      <div class="label">Historical annotation lines</div>
+      <p>Three dashed vertical lines mark key EV industry events (2010 Leaf/Volt launch, 2017 Model 3, 2022 IRA). These give users contextual anchors to explain growth patterns they observe in the data.</p>
+    </div>
+    <div class="design-choice">
+      <div class="label">Brand click → line chart update</div>
+      <p>Clicking a brand in the bar chart highlights that brand's trend on the line chart as a colored line over a grey context line. This cross-chart linking allows users to compare any brand's individual trajectory against the overall market.</p>
+    </div>
+  </section>
+
+  <section id="insights">
+    <h2>Insights & Data Exploration</h2>
+    <div class="insight-card">
+      <div class="num">Finding 01</div>
+      <h3>Tesla dominates Washington's EV market by a massive margin</h3>
+      <p>Across all years, Tesla accounts for roughly 40%+ of all EV registrations — far exceeding any other brand. Selecting 2020–2024 in the line chart, Tesla's bar dwarfs all others with over 50,000 vehicles.</p>
+      <div class="screenshot-placeholder">[ Screenshot: bar chart showing Tesla's dominant bar ]</div>
+    </div>
+    <div class="insight-card">
+      <div class="num">Finding 02</div>
+      <h3>EV adoption exploded after 2020</h3>
+      <p>The line chart shows relatively flat growth from 2010–2019, then a dramatic upward curve from 2020 onward. Selecting 2010–2019 vs 2020–2024 on the line chart shows how the market roughly tripled in size in just 4 years.</p>
+      <div class="screenshot-placeholder">[ Screenshot: line chart showing steep post-2020 growth ]</div>
+    </div>
+    <div class="insight-card">
+      <div class="num">Finding 03</div>
+      <h3>Early market (2010–2014) was dominated by Nissan and Chevrolet</h3>
+      <p>Filtering to 2010–2014 reveals that Nissan (Leaf) and Chevrolet (Volt) were the top brands — Tesla was third. This shows how early EV adoption was led by affordable mass-market options before Tesla's rise.</p>
+      <div class="screenshot-placeholder">[ Screenshot: bar chart filtered to 2010–2014 ]</div>
+    </div>
+    <div class="insight-card">
+      <div class="num">Finding 04</div>
+      <h3>Switching to PHEV filter shifts the rankings significantly</h3>
+      <p>When filtering to PHEV only, Chevrolet (Volt) and Toyota (Prius Prime) rise significantly while Tesla disappears entirely — Tesla only makes BEVs. This shows how brand dominance is highly dependent on vehicle type.</p>
+      <div class="screenshot-placeholder">[ Screenshot: PHEV filter showing different brand rankings ]</div>
+    </div>
+  </section>
+
+  <section id="dataset">
+    <h2>Dataset</h2>
+    <p><strong>Source:</strong> <a href="https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2" style="color:var(--blue)">Washington State Department of Licensing — Electric Vehicle Population Data</a></p>
+    <p>The dataset contains 200,000+ registered EV records in Washington State. Key attributes used: Make, Model Year, Electric Vehicle Type (BEV/PHEV). Data is filtered to model years 2010–2024 to remove data entry errors and focus on the modern EV era.</p>
+  </section>
+</main>
+</body>
+</html>

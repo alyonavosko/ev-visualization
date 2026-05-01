@@ -321,11 +321,22 @@ function drawBarChart() {
       .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500')
       .attr('fill', textColor).text(make);
 
-    // Bar color scale: dark purple (rank 0/top) → light purple (last rank)
+    // Bar color scale: dark→light based on active type
     const t = entries.length > 1 ? i / (entries.length - 1) : 0;
-    const cr = Math.round(91 + (196-91)*t);
-    const cg = Math.round(33 + (181-33)*t);
-    const cb = Math.round(182 + (253-182)*t);
+    let darkC, lightC;
+    if (activeType === 'Battery Electric Vehicle (BEV)') {
+      // dark teal → light teal
+      darkC = [13,120,116]; lightC = [153,230,227];
+    } else if (activeType === 'Plug-in Hybrid Electric Vehicle (PHEV)') {
+      // dark blue → light blue
+      darkC = [37,99,235]; lightC = [147,197,253];
+    } else {
+      // dark purple → light purple
+      darkC = [91,33,182]; lightC = [196,181,253];
+    }
+    const cr = Math.round(darkC[0] + (lightC[0]-darkC[0])*t);
+    const cg = Math.round(darkC[1] + (lightC[1]-darkC[1])*t);
+    const cb = Math.round(darkC[2] + (lightC[2]-darkC[2])*t);
     const barFill = isActive ? `rgb(${cr},${cg},${cb})` : '#e2e4e9';
 
     barG.append('rect')
@@ -339,7 +350,11 @@ function drawBarChart() {
       .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove', moveTooltip)
       .on('mouseout', hideTooltip)
-      .on('click', () => { selectedMake = selectedMake===make ? null : make; refreshAll(); });
+      .on('click', () => {
+        selectedMake = selectedMake===make ? null : make;
+        drawBarChart();
+        drawLineChart();
+      });
 
     barG.append('text')
       .attr('class','bar-animated')

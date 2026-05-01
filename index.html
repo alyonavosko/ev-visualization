@@ -36,7 +36,7 @@
     .intro-top { font-size: 0.95rem; color: var(--text); font-weight: 400; margin-bottom: 1rem; line-height: 1.6; }
     .intro-top strong { color: var(--text); font-weight: 700; }
     .intro-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .legend-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1.25rem; flex: 1; min-width: 160px; }
+    .legend-card { background: #f8f9fb; border: 1px solid #e8eaf0; border-radius: 10px; padding: 0.85rem 1.25rem; flex: 1; min-width: 160px; }
     .legend-card .lc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     .legend-card .lc-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
@@ -144,36 +144,37 @@ let brushedYears = null;
 let jsonData = {};
 
 const logoMap = {
-  // Local uploads
-  'TESLA':'logos/tesla.png','CHEVROLET':'logos/chevrolet.png','NISSAN':'logos/nissan.png',
-  'FORD':'logos/ford.png','KIA':'logos/kia.png','TOYOTA':'logos/toyota.png',
-  'BMW':'logos/bmw.png','HYUNDAI':'logos/hyundai.png','RIVIAN':'logos/rivian.png',
-  'VOLKSWAGEN':'logos/volkswagen.png','VOLVO':'logos/volvo.png','JEEP':'logos/jeep.png',
-  // Wikipedia SVGs for all other brands
-  'AUDI':'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
-  'PORSCHE':'https://upload.wikimedia.org/wikipedia/de/8/8b/Porsche_logo.svg',
-  'MERCEDES-BENZ':'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
-  'MITSUBISHI':'https://upload.wikimedia.org/wikipedia/commons/7/7b/Mitsubishi_logo.svg',
-  'SUBARU':'https://upload.wikimedia.org/wikipedia/commons/5/5c/Subaru_logo.svg',
-  'HONDA':'https://upload.wikimedia.org/wikipedia/commons/3/38/Honda.svg',
-  'LINCOLN':'https://upload.wikimedia.org/wikipedia/commons/6/60/Lincoln_Motor_Company_logo.svg',
-  'CADILLAC':'https://upload.wikimedia.org/wikipedia/commons/3/3b/Cadillac_logo.svg',
-  'JAGUAR':'https://upload.wikimedia.org/wikipedia/commons/a/a9/Jaguar_logo_2012.svg',
-  'MINI':'https://upload.wikimedia.org/wikipedia/commons/9/9b/MINI_logo.svg',
-  'LAND ROVER':'https://upload.wikimedia.org/wikipedia/commons/e/e3/Land_Rover_logo.svg',
-  'ALFA ROMEO':'https://upload.wikimedia.org/wikipedia/commons/3/38/Alfa_Romeo_logo_%282015%29.svg',
-  'POLESTAR':'https://upload.wikimedia.org/wikipedia/commons/c/c0/Polestar_logo_black.svg',
-  'GENESIS':'https://upload.wikimedia.org/wikipedia/commons/1/17/Genesis-logo.svg',
-  'LUCID':'https://upload.wikimedia.org/wikipedia/commons/8/80/Lucid_Motors_logo.svg',
-  'LEXUS':'https://upload.wikimedia.org/wikipedia/commons/e/e0/Lexus_division_emblem.svg',
-  'GMC':'https://upload.wikimedia.org/wikipedia/commons/6/6f/GMC_logo.svg',
-  'ACURA':'https://upload.wikimedia.org/wikipedia/commons/1/15/Acura_logo.svg',
-  'DODGE':'https://upload.wikimedia.org/wikipedia/commons/7/73/Dodge_logo.svg',
-  'FISKER':'https://upload.wikimedia.org/wikipedia/commons/c/c4/Fisker_Inc._Logo.svg',
-  'VINFAST':'https://upload.wikimedia.org/wikipedia/commons/7/7d/VinFast_logo.svg',
-  'FIAT':'https://upload.wikimedia.org/wikipedia/commons/8/80/Fiat_Automobiles_logo.svg',
-  'CHRYSLER':'https://upload.wikimedia.org/wikipedia/commons/a/a4/Chrysler_logo.svg',
-  'BENTLEY':'https://upload.wikimedia.org/wikipedia/commons/b/bf/Bentley_logo.svg',
+  'TESLA':'https://www.carlogos.org/car-logos/tesla-logo-2200x2800.png',
+  'CHEVROLET':'https://www.carlogos.org/car-logos/chevrolet-logo-2013-download.png',
+  'NISSAN':'https://www.carlogos.org/car-logos/nissan-logo-2020-black.png',
+  'FORD':'https://www.carlogos.org/car-logos/ford-logo-2017.png',
+  'KIA':'https://www.carlogos.org/car-logos/kia-logo-2021.png',
+  'TOYOTA':'https://www.carlogos.org/car-logos/toyota-logo-2020-europe.png',
+  'BMW':'https://www.carlogos.org/car-logos/bmw-logo-2020.png',
+  'HYUNDAI':'https://www.carlogos.org/car-logos/hyundai-logo-2011.png',
+  'RIVIAN':'https://www.carlogos.org/car-logos/rivian-logo.png',
+  'VOLKSWAGEN':'https://www.carlogos.org/car-logos/volkswagen-logo-2019.png',
+  'VOLVO':'https://www.carlogos.org/car-logos/volvo-logo-1999.png',
+  'JEEP':'https://www.carlogos.org/car-logos/jeep-logo-3500x2700.png',
+  'AUDI':'https://www.carlogos.org/car-logos/audi-logo-2016.png',
+  'PORSCHE':'https://www.carlogos.org/car-logos/porsche-logo-2014.png',
+  'MERCEDES-BENZ':'https://www.carlogos.org/car-logos/mercedes-benz-logo-2011.png',
+  'MITSUBISHI':'https://www.carlogos.org/car-logos/mitsubishi-logo-640.png',
+  'SUBARU':'https://www.carlogos.org/car-logos/subaru-logo-2019.png',
+  'HONDA':'https://www.carlogos.org/car-logos/honda-logo-1700x1150.png',
+  'LINCOLN':'https://www.carlogos.org/car-logos/lincoln-logo-1200x1200.png',
+  'CADILLAC':'https://www.carlogos.org/car-logos/cadillac-logo-2021.png',
+  'JAGUAR':'https://www.carlogos.org/car-logos/jaguar-logo-2012-download.png',
+  'MINI':'https://www.carlogos.org/car-logos/mini-logo-2018.png',
+  'POLESTAR':'https://www.carlogos.org/car-logos/polestar-logo-black.png',
+  'GENESIS':'https://www.carlogos.org/car-logos/genesis-logo-2020.png',
+  'LEXUS':'https://www.carlogos.org/car-logos/lexus-logo-1988.png',
+  'GMC':'https://www.carlogos.org/car-logos/gmc-logo-2020.png',
+  'ACURA':'https://www.carlogos.org/car-logos/acura-logo-1990.png',
+  'DODGE':'https://www.carlogos.org/car-logos/dodge-logo-2010.png',
+  'FIAT':'https://www.carlogos.org/car-logos/fiat-logo-2006.png',
+  'CHRYSLER':'https://www.carlogos.org/car-logos/chrysler-logo-2010.png',
+  'BENTLEY':'https://www.carlogos.org/car-logos/bentley-logo-1919.png',
 };
 
 function getActiveColor() {
@@ -297,19 +298,17 @@ function drawBarChart() {
     defs.append('clipPath').attr('id',clipId).append('rect').attr('x',0).attr('y',-10).attr('width',LABEL_W).attr('height',20);
     svg.append('text').attr('clip-path',`url(#${clipId})`).attr('transform',`translate(${16+LOGO_W+6},${yMid})`).attr('dy','0.35em').attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500').attr('fill',textColor).text(make);
 
-    // Per-bar gradient using userSpaceOnUse so each bar fades from full width to transparent
-    const gradId = `barGrad-${i}`;
-    if (isActive) {
-      const bg = defs.append('linearGradient').attr('id',gradId)
-        .attr('gradientUnits','userSpaceOnUse')
-        .attr('x1','0').attr('x2',x(count)).attr('y1','0').attr('y2','0');
-      bg.append('stop').attr('offset','0%').attr('stop-color',activeCol).attr('stop-opacity',1);
-      bg.append('stop').attr('offset','100%').attr('stop-color',activeCol).attr('stop-opacity',0.25);
-    }
+    // Solid bar — darkest at top (i=0), lightest at bottom — but grey if not selected
+    const minOpacity = 0.22;
+    const maxOpacity = 1.0;
+    const rankOpacity = maxOpacity - (i / Math.max(entries.length-1,1)) * (maxOpacity - minOpacity);
+    const barColor = isActive ? activeCol : '#d1d5db';
+    const barOpacity = isActive ? rankOpacity : 1;
 
     barG.append('rect').attr('class','bar bar-animated').style('animation-delay',`${i*26}ms`)
       .attr('x',0).attr('y',y(make)).attr('height',y.bandwidth()).attr('rx',3)
-      .attr('fill', isActive ? `url(#${gradId})` : '#e5e7eb')
+      .attr('fill', barColor)
+      .attr('opacity', barOpacity)
       .attr('width',x(count))
       .on('mouseover',e=>showTooltip(e,`<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove',moveTooltip).on('mouseout',hideTooltip)
@@ -360,7 +359,7 @@ function drawLineChart() {
     if (a.year < x.domain()[0] || a.year > x.domain()[1]) return;
     const xp = x(a.year);
     g.append('line').attr('x1',xp).attr('x2',xp).attr('y1',0).attr('y2',height).attr('stroke','#9ca3af').attr('stroke-width',1).attr('stroke-dasharray','5,4').attr('opacity',0.7);
-    g.append('text').attr('x',xp+4).attr('y',10).attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280').attr('font-weight','400').text(a.label);
+    g.append('text').attr('x',xp+4).attr('y',10).attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280').attr('font-weight','400').text(a.label);
   });
 
   // Line gradient left→right
@@ -371,7 +370,9 @@ function drawLineChart() {
   const area = d3.area().x(d=>x(d[0])).y0(height).y1(d=>y(d[1])).curve(d3.curveMonotoneX);
   const line = d3.line().x(d=>x(d[0])).y(d=>y(d[1])).curve(d3.curveMonotoneX);
   g.append('path').datum(byYearAll).attr('fill','url(#areaGrad)').attr('d',area);
-  g.append('path').datum(byYearAll).attr('fill','none').attr('stroke',selectedMake?'#d1d5db':`url(#lineGrad)`).attr('stroke-width',selectedMake?1.5:2.5).attr('d',line);
+  g.append('path').datum(byYearAll).attr('fill','none')
+    .attr('stroke', selectedMake ? '#d1d5db' : `url(#lineGrad)`)
+    .attr('stroke-width', selectedMake ? 1.5 : 2.5).attr('d',line);
 
   // Selected make line
   if (byYearMake && byYearMake.length>0) {
@@ -431,8 +432,10 @@ function drawLineChart() {
   // All dots rendered AFTER brush so they're hoverable
   g.selectAll('.line-dot-all').data(byYearAll).enter().append('circle')
     .attr('class','line-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1]))
-    .attr('r',selectedMake?3.5:6).attr('fill',selectedMake?'#d1d5db':lineColor)
-    .attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
+    .attr('r', selectedMake ? 3.5 : 6)
+    .attr('fill', selectedMake ? '#d1d5db' : lineColor)
+    .attr('stroke','#fff').attr('stroke-width', selectedMake ? 1 : 2)
+    .style('pointer-events','all').style('cursor','pointer')
     .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${d3.format(',')(d[1])} vehicles registered with model year ${d[0]}`);})
     .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
 }

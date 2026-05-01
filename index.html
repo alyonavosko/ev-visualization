@@ -289,34 +289,63 @@ function drawBarChart() {
   entries.forEach(([make, count], i) => {
     const yMid = mTop+y(make)+y.bandwidth()/2;
     const isActive = !selectedMake || selectedMake===make;
-    const textColor = isActive ? '#374151' : '#9ca3af';
-    const logoUrl = logoMap[make];
+    const textColor = isActive ? '#374151' : '#b0b7c3';
+
+    // Logo — try local first, fall back to carlogos.org
+    const localUrl = `logos/${make.toLowerCase().replace(/ /g,'-')}.png`;
+    const remoteUrl = logoMap[make];
+    const logoUrl = remoteUrl || localUrl;
     if (logoUrl) {
-      svg.append('image').attr('href',logoUrl).attr('x',16).attr('y',yMid-11).attr('width',LOGO_W).attr('height',LOGO_W).attr('preserveAspectRatio','xMidYMid meet').style('opacity',isActive?0.85:0.25).on('error',function(){d3.select(this).remove();});
+      const img = svg.append('image')
+        .attr('href', localUrl)
+        .attr('x',16).attr('y',yMid-11)
+        .attr('width',LOGO_W).attr('height',LOGO_W)
+        .attr('preserveAspectRatio','xMidYMid meet')
+        .style('opacity', isActive ? 0.85 : 0.2);
+      // fallback to remote if local fails
+      img.on('error', function() {
+        if (remoteUrl) d3.select(this).attr('href', remoteUrl).on('error', function() { d3.select(this).remove(); });
+        else d3.select(this).remove();
+      });
     }
+
+    // Brand label — fixed 80px wide, clipped, 8px gap to bar
+    const LABEL_X = 16 + LOGO_W + 4;
     const clipId = `clip-${i}`;
-    defs.append('clipPath').attr('id',clipId).append('rect').attr('x',0).attr('y',-10).attr('width',LABEL_W).attr('height',20);
-    svg.append('text').attr('clip-path',`url(#${clipId})`).attr('transform',`translate(${16+LOGO_W+6},${yMid})`).attr('dy','0.35em').attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500').attr('fill',textColor).text(make);
+    defs.append('clipPath').attr('id', clipId)
+      .append('rect').attr('x',0).attr('y',-10).attr('width', LABEL_W).attr('height',20);
+    svg.append('text')
+      .attr('clip-path', `url(#${clipId})`)
+      .attr('transform', `translate(${LABEL_X},${yMid})`)
+      .attr('dy','0.35em')
+      .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500')
+      .attr('fill', textColor).text(make);
 
-    // Solid bar — darkest at top (i=0), lightest at bottom — but grey if not selected
-    const minOpacity = 0.22;
-    const maxOpacity = 1.0;
-    const rankOpacity = maxOpacity - (i / Math.max(entries.length-1,1)) * (maxOpacity - minOpacity);
-    const barColor = isActive ? activeCol : '#d1d5db';
-    const barOpacity = isActive ? rankOpacity : 1;
+    // Bar — opacity gradient: rank 0 (top) = 100%, last rank = 5%
+    const rankOpacity = isActive
+      ? 1.0 - (i / Math.max(entries.length-1,1)) * 0.95
+      : 1;
+    const barFill = isActive ? activeCol : '#e2e4e9';
 
-    barG.append('rect').attr('class','bar bar-animated').style('animation-delay',`${i*26}ms`)
-      .attr('x',0).attr('y',y(make)).attr('height',y.bandwidth()).attr('rx',3)
-      .attr('fill', barColor)
-      .attr('opacity', barOpacity)
-      .attr('width',x(count))
-      .on('mouseover',e=>showTooltip(e,`<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
-      .on('mousemove',moveTooltip).on('mouseout',hideTooltip)
-      .on('click',()=>{ selectedMake=selectedMake===make?null:make; refreshAll(); });
+    barG.append('rect')
+      .attr('class','bar bar-animated')
+      .style('animation-delay',`${i*26}ms`)
+      .attr('x',0).attr('y',y(make))
+      .attr('height',y.bandwidth()).attr('rx',3)
+      .attr('fill', barFill)
+      .attr('opacity', rankOpacity)
+      .attr('width', x(count))
+      .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
+      .on('mousemove', moveTooltip)
+      .on('mouseout', hideTooltip)
+      .on('click', () => { selectedMake = selectedMake===make ? null : make; refreshAll(); });
 
-    barG.append('text').attr('class','bar-animated').style('animation-delay',`${i*26}ms`)
-      .attr('x',x(count)+6).attr('y',y(make)+y.bandwidth()/2).attr('dy','0.35em')
-      .attr('font-size','11px').attr('font-family','Inter,sans-serif').attr('fill',textColor)
+    barG.append('text')
+      .attr('class','bar-animated')
+      .style('animation-delay',`${i*26}ms`)
+      .attr('x', x(count)+6).attr('y', y(make)+y.bandwidth()/2)
+      .attr('dy','0.35em').attr('font-size','11px').attr('font-family','Inter,sans-serif')
+      .attr('fill', textColor)
       .text(`${d3.format(',')(count)}  (${((count/total)*100).toFixed(1)}%)`);
   });
 }
@@ -384,7 +413,7 @@ function drawLineChart() {
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
       .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
-      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${selectedMake}: ${d3.format(',')(d[1])} vehicles`);})
+      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${selectedMake ? selectedMake+': ' : ''}${d3.format(',')(d[1])} vehicles`);})
       .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
   }
 
@@ -442,7 +471,7 @@ function drawLineChart() {
 
 function refreshAll(skipLine=false) {
   drawBarChart();
-  if (!skipLine) drawLineChart();
+  drawLineChart();
 }
 
 document.querySelectorAll('.toggle-btn').forEach(btn => {

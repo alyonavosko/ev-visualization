@@ -321,11 +321,12 @@ function drawBarChart() {
       .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500')
       .attr('fill', textColor).text(make);
 
-    // Bar — opacity gradient: rank 0 (top) = 100%, last rank = 5%
-    const rankOpacity = isActive
-      ? 1.0 - (i / Math.max(entries.length-1,1)) * 0.95
-      : 1;
-    const barFill = isActive ? activeCol : '#e2e4e9';
+    // Bar color scale: dark purple (rank 0/top) → light purple (last rank)
+    const t = entries.length > 1 ? i / (entries.length - 1) : 0;
+    const cr = Math.round(91 + (196-91)*t);
+    const cg = Math.round(33 + (181-33)*t);
+    const cb = Math.round(182 + (253-182)*t);
+    const barFill = isActive ? `rgb(${cr},${cg},${cb})` : '#e2e4e9';
 
     barG.append('rect')
       .attr('class','bar bar-animated')
@@ -333,7 +334,7 @@ function drawBarChart() {
       .attr('x',0).attr('y',y(make))
       .attr('height',y.bandwidth()).attr('rx',3)
       .attr('fill', barFill)
-      .attr('opacity', rankOpacity)
+      .attr('opacity', 1)
       .attr('width', x(count))
       .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove', moveTooltip)
@@ -456,7 +457,18 @@ function drawLineChart() {
     });
   const brushG = g.append('g').attr('class','year-brush').call(brush);
   brushG.select('.selection').style('fill',lineColor).style('stroke',lineColor);
-  if (brushedYears) brushG.call(brush.move,[x(brushedYears[0]),x(brushedYears[1])]);
+  if (brushedYears) {
+    brushG.call(brush.move,[x(brushedYears[0]),x(brushedYears[1])]);
+    // Always show label when a selection exists
+    const selTotal = getTotalInRange(brushedYears);
+    const mid = (x(brushedYears[0])+x(brushedYears[1]))/2;
+    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+      .text(`${d3.format(',')(selTotal)} vehicles`);
+    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
+      .text(`${brushedYears[0]}–${brushedYears[1]}`);
+  }
 
   // All dots rendered AFTER brush so they're hoverable
   g.selectAll('.line-dot-all').data(byYearAll).enter().append('circle')

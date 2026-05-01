@@ -498,7 +498,7 @@ function drawLineChart() {
 
 function refreshAll(skipLine=false) {
   drawBarChart();
-  drawLineChart();
+  if (!skipLine) drawLineChart();
 }
 
 document.querySelectorAll('.toggle-btn').forEach(btn => {

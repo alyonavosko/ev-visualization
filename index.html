@@ -264,12 +264,12 @@ function drawBarChart() {
   const { counts, total } = getMakeCounts(brushedYears);
   const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12);
   const activeCol = getActiveColor();
-  const LOGO_W=22, GAP=16;
+  const LOGO_W=22, GAP=8;
   const containerW = document.getElementById('bar-chart').offsetWidth;
   const mTop=8, mRight=120, mBottom=48;
   const LOGO_X = 22;                        // logo start x
   const LABEL_X = LOGO_X + LOGO_W + 5;     // label start x
-  const LABEL_W = 110;                        // enough for full names
+  const LABEL_W = 90;                        // enough for full names
   const leftOffset = LABEL_X + LABEL_W + GAP; // bars start here
   const barWidth = containerW - leftOffset - mRight;
   const height = 420-mTop-mBottom;
@@ -329,7 +329,7 @@ function drawBarChart() {
     // - other bar selected → grey
     let barFill;
     if (hasSelection) {
-      barFill = isSelected ? '#7c3aed' : '#9ca3af';
+      barFill = isSelected ? '#7c3aed' : '#d1d5db';
     } else {
       const t = entries.length > 1 ? i / (entries.length - 1) : 0;
       let darkC, lightC;
@@ -352,14 +352,15 @@ function drawBarChart() {
       .attr('x',0).attr('y',y(make))
       .attr('height',y.bandwidth()).attr('rx',3)
       .attr('fill', barFill)
-      
+      .attr('opacity', (hasSelection && !isSelected) ? 0.55 : 1)
       .attr('width', x(count))
       .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove', moveTooltip)
       .on('mouseout', hideTooltip)
       .on('click', () => {
         selectedMake = selectedMake===make ? null : make;
-        refreshAll();
+        drawBarChart();
+        drawLineChart();
       });
 
     barG.append('text')
@@ -430,12 +431,7 @@ function drawLineChart() {
     g.append('path').datum(byYearMake).attr('fill','url(#areaGradMake)').attr('d',area);
     g.append('path').datum(byYearMake).attr('fill','none').attr('stroke',lineColor).attr('stroke-width',2.5).attr('d',line);
     const last = byYearMake[byYearMake.length-1];
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em')
-      .attr('font-size','10px').attr('font-weight','600').attr('stroke','#fff').attr('stroke-width',3)
-      .attr('stroke-linejoin','round').style('pointer-events','none').text(selectedMake);
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em')
-      .attr('font-size','10px').attr('font-weight','600').attr('fill',lineColor)
-      .style('pointer-events','none').text(selectedMake);
+    g.append('text').attr('x',x(last[0])+6).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','10px').attr('font-weight','600').attr('fill',lineColor).text(selectedMake);
     // Selected make dots — rendered LAST so they're on top
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
@@ -479,7 +475,7 @@ function drawLineChart() {
           .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
           .text(`${brushedYears[0]}–${brushedYears[1]}`);
       }
-      selectedMake=null; refreshAll();
+      selectedMake=null; refreshAll(true);
     });
   const brushG = g.append('g').attr('class','year-brush').call(brush);
   brushG.select('.selection').style('fill',lineColor).style('stroke',lineColor);

@@ -476,7 +476,9 @@ function drawLineChart() {
     const selDisplayTotal = selectedMake
       ? getYearCounts(selectedMake).filter(d=>d[0]>=brushedYears[0]&&d[0]<=brushedYears[1]).reduce((s,d)=>s+d[1],0)
       : getTotalInRange(brushedYears);
-    const selDisplayLabel = selectedMake ? `${selectedMake} · ${brushedYears[0]}–${brushedYears[1]}` : `${brushedYears[0]}–${brushedYears[1]}`;
+    const selDisplayLabel = selectedMake
+      ? `${selectedMake} · ${brushedYears[0]}–${brushedYears[1]}`
+      : `${brushedYears[0]}–${brushedYears[1]}`;
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
       .text(`${d3.format(',')(selDisplayTotal)} vehicles`);
@@ -497,11 +499,12 @@ function drawLineChart() {
 
   // Make-dots rendered LAST — on top of everything including brush
   if (byYearMake && byYearMake.length>0) {
+    const captureMake = selectedMake;
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',6)
       .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2)
       .style('pointer-events','all').style('cursor','pointer')
-      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake} · ${d[0]}</strong>${d3.format(',')(d[1])} vehicles`);})
+      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${captureMake} · ${d[0]}</strong>${d3.format(',')(d[1])} vehicles`);})
       .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
   }
 }

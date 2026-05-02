@@ -358,8 +358,7 @@ function drawBarChart() {
       .on('mouseout', hideTooltip)
       .on('click', () => {
         selectedMake = selectedMake===make ? null : make;
-        drawBarChart();
-        drawLineChart();
+        refreshAll();
       });
 
     barG.append('text')

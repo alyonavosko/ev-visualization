@@ -73,7 +73,8 @@
     .year-brush .selection { fill-opacity: 0.12; stroke-width: 2; }
     .year-brush .overlay { fill: none; pointer-events: all; stroke: none !important; outline: none !important; }
     .year-brush .handle { display: none; }
-    .year-brush rect { outline: none !important; border: none !important; }
+    .year-brush rect { outline: none !important; border: none !important; stroke: none !important; }
+    .year-brush .overlay { stroke: none !important; }
     @keyframes barIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
     .bar-animated { animation: barIn 0.3s ease both; }
 
@@ -118,7 +119,7 @@
   <div class="chart-panel">
     <div class="panel-header-row">
       <div>
-        <div class="panel-title">EV Registrations Over Time</div>
+        <div class="panel-title" id="line-title">EV Registrations Over Time</div>
         <div class="panel-desc">Growth in EV registrations by year</div>
       </div>
       <button class="reset-btn" id="reset-line">Clear selection</button>
@@ -267,7 +268,7 @@ function drawBarChart() {
   const LOGO_W=22, GAP=8;
   const containerW = document.getElementById('bar-chart').offsetWidth;
   const mTop=8, mRight=120, mBottom=48;
-  const LOGO_X = 22;                        // logo start x
+  const LOGO_X = 30;                        // logo start x — 8px from y-axis label
   const LABEL_X = LOGO_X + LOGO_W + 5;     // label start x
   const LABEL_W = 90;                        // enough for full names
   const leftOffset = LABEL_X + LABEL_W + GAP; // bars start here
@@ -327,24 +328,20 @@ function drawBarChart() {
     // - no selection → color scale (dark→light by rank)
     // - this bar selected → always purple #7c3aed
     // - other bar selected → grey
-    let barFill;
-    if (hasSelection) {
-      barFill = isSelected ? '#7c3aed' : '#9ca3af';
+    const t = entries.length > 1 ? i / (entries.length - 1) : 0;
+    let darkC, lightC;
+    if (activeType === 'Battery Electric Vehicle (BEV)') {
+      darkC = [13,120,116]; lightC = [153,230,227];
+    } else if (activeType === 'Plug-in Hybrid Electric Vehicle (PHEV)') {
+      darkC = [37,99,235]; lightC = [147,197,253];
     } else {
-      const t = entries.length > 1 ? i / (entries.length - 1) : 0;
-      let darkC, lightC;
-      if (activeType === 'Battery Electric Vehicle (BEV)') {
-        darkC = [13,120,116]; lightC = [153,230,227];
-      } else if (activeType === 'Plug-in Hybrid Electric Vehicle (PHEV)') {
-        darkC = [37,99,235]; lightC = [147,197,253];
-      } else {
-        darkC = [91,33,182]; lightC = [196,181,253];
-      }
-      const cr = Math.round(darkC[0] + (lightC[0]-darkC[0])*t);
-      const cg = Math.round(darkC[1] + (lightC[1]-darkC[1])*t);
-      const cb = Math.round(darkC[2] + (lightC[2]-darkC[2])*t);
-      barFill = `rgb(${cr},${cg},${cb})`;
+      darkC = [91,33,182]; lightC = [196,181,253];
     }
+    const cr = Math.round(darkC[0] + (lightC[0]-darkC[0])*t);
+    const cg = Math.round(darkC[1] + (lightC[1]-darkC[1])*t);
+    const cb = Math.round(darkC[2] + (lightC[2]-darkC[2])*t);
+    const scaleColor = `rgb(${cr},${cg},${cb})`;
+    const barFill = hasSelection ? (isSelected ? scaleColor : '#F1F1F1') : scaleColor;
 
     barG.append('rect')
       .attr('class','bar bar-animated')
@@ -376,6 +373,8 @@ function drawBarChart() {
 // ── Line Chart ──
 function drawLineChart() {
   d3.select('#line-chart').selectAll('*').remove();
+  const lineTitle = document.getElementById('line-title');
+  if (lineTitle) lineTitle.textContent = selectedMake ? `EV Registrations Over Time (${selectedMake})` : 'EV Registrations Over Time';
   const byYearAll = getYearCounts(null);
   const byYearMake = selectedMake ? getYearCounts(selectedMake) : null;
   const margin = {top:14, right:24, bottom:48, left:58};
@@ -431,13 +430,12 @@ function drawLineChart() {
     g.append('path').datum(byYearMake).attr('fill','url(#areaGradMake)').attr('d',area);
     g.append('path').datum(byYearMake).attr('fill','none').attr('stroke',lineColor).attr('stroke-width',2.5).attr('d',line);
     const last = byYearMake[byYearMake.length-1];
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','11px').attr('font-weight','700').attr('stroke','#fff').attr('stroke-width',4).attr('paint-order','stroke').style('pointer-events','none').text(selectedMake);
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor).style('pointer-events','none').text(selectedMake);
+    g.append('text').attr('x',x(last[0])+6).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','10px').attr('font-weight','600').attr('fill',lineColor).text(selectedMake);
     // Selected make dots — rendered LAST so they're on top
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
       .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
-      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake}</strong>${d3.format(',')(d[1])} vehicles in ${d[0]}`);})
+      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake} · ${d[0]}</strong>${d3.format(',')(d[1])} vehicles`);})
       .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
   }
 
@@ -451,12 +449,14 @@ function drawLineChart() {
       const total = getTotalInRange([y0,y1]);
       g.selectAll('.brush-label').remove();
       const mid = (event.selection[0]+event.selection[1])/2;
+      const displayTotal = selectedMake ? (getYearCounts(selectedMake).filter(d=>d[0]>=y0&&d[0]<=y1).reduce((s,d)=>s+d[1],0)) : total;
+      const displayLabel = selectedMake ? `${selectedMake} · ${y0}–${y1}` : `${y0}–${y1}`;
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-        .text(`${d3.format(',')(total)} vehicles`);
+        .text(`${d3.format(',')(displayTotal)} vehicles`);
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-        .text(`${y0}–${y1}`);
+        .text(displayLabel);
     })
     .on('end', event => {
       if (!event.selection) {
@@ -484,14 +484,17 @@ function drawLineChart() {
   if (brushedYears) {
     brushG.call(brush.move,[x(brushedYears[0]),x(brushedYears[1])]);
     // Always show label when a selection exists
-    const selTotal = getTotalInRange(brushedYears);
     const mid = (x(brushedYears[0])+x(brushedYears[1]))/2;
+    const selDisplayTotal = selectedMake
+      ? getYearCounts(selectedMake).filter(d=>d[0]>=brushedYears[0]&&d[0]<=brushedYears[1]).reduce((s,d)=>s+d[1],0)
+      : getTotalInRange(brushedYears);
+    const selDisplayLabel = selectedMake ? `${selectedMake} · ${brushedYears[0]}–${brushedYears[1]}` : `${brushedYears[0]}–${brushedYears[1]}`;
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-      .text(`${d3.format(',')(selTotal)} vehicles`);
+      .text(`${d3.format(',')(selDisplayTotal)} vehicles`);
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-      .text(`${brushedYears[0]}–${brushedYears[1]}`);
+      .text(selDisplayLabel);
   }
 
   // All dots rendered AFTER brush so they're hoverable

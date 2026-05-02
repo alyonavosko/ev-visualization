@@ -189,6 +189,10 @@ function getActiveColor() {
 function hexToRgb(hex) {
   return { r: parseInt(hex.slice(1,3),16), g: parseInt(hex.slice(3,5),16), b: parseInt(hex.slice(5,7),16) };
 }
+function hexToRgbStr(hex) {
+  const {r,g,b} = hexToRgb(hex);
+  return `${r},${g},${b}`;
+}
 function getBarTitle() {
   const t = activeType === 'Battery Electric Vehicle (BEV)' ? 'BEV' : activeType === 'Plug-in Hybrid Electric Vehicle (PHEV)' ? 'PHEV' : 'EV';
   return brushedYears ? `Top ${t} Makes (${brushedYears[0]}–${brushedYears[1]})` : `Top ${t} Makes`;
@@ -473,18 +477,49 @@ function drawLineChart() {
     brushG.call(brush.move,[x(brushedYears[0]),x(brushedYears[1])]);
     // Always show label when a selection exists
     const mid = (x(brushedYears[0])+x(brushedYears[1]))/2;
-    const selDisplayTotal = selectedMake
-      ? getYearCounts(selectedMake).filter(d=>d[0]>=brushedYears[0]&&d[0]<=brushedYears[1]).reduce((s,d)=>s+d[1],0)
-      : getTotalInRange(brushedYears);
-    const selDisplayLabel = selectedMake
-      ? `${selectedMake} · ${brushedYears[0]}–${brushedYears[1]}`
-      : `${brushedYears[0]}–${brushedYears[1]}`;
-    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-      .text(`${d3.format(',')(selDisplayTotal)} vehicles`);
-    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
-      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-      .text(selDisplayLabel);
+    const captureMakeLabel = selectedMake;
+    const totalInRange = getTotalInRange(brushedYears);
+    const brandInRange = captureMakeLabel
+      ? getYearCounts(captureMakeLabel).filter(d=>d[0]>=brushedYears[0]&&d[0]<=brushedYears[1]).reduce((s,d)=>s+d[1],0)
+      : null;
+
+    if (captureMakeLabel && brandInRange !== null) {
+      // Two stacked blocks: top = total (grey bg), bottom = brand count
+      const blockY = height/2 - 28;
+      // Top block — total
+      g.append('rect').attr('class','brush-label')
+        .attr('x', mid-90).attr('y', blockY).attr('width',180).attr('height',28)
+        .attr('fill','rgba(200,200,200,0.35)').attr('rx',4);
+      g.append('text').attr('class','brush-label')
+        .attr('x',mid).attr('y',blockY+10).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','700').attr('fill','#374151')
+        .text(`${d3.format(',')(totalInRange)} vehicles total`);
+      g.append('text').attr('class','brush-label')
+        .attr('x',mid).attr('y',blockY+22).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
+        .text(`${brushedYears[0]}–${brushedYears[1]}`);
+      // Bottom block — brand count
+      const blockY2 = blockY + 28;
+      g.append('rect').attr('class','brush-label')
+        .attr('x', mid-90).attr('y', blockY2).attr('width',180).attr('height',28)
+        .attr('fill',`rgba(${hexToRgbStr(lineColor)},0.15)`).attr('rx',4);
+      g.append('text').attr('class','brush-label')
+        .attr('x',mid).attr('y',blockY2+10).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor)
+        .text(`${d3.format(',')(brandInRange)} ${captureMakeLabel}`);
+      g.append('text').attr('class','brush-label')
+        .attr('x',mid).attr('y',blockY2+22).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
+        .text(`${brushedYears[0]}–${brushedYears[1]}`);
+    } else {
+      // No brand selected — just show total
+      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
+        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+        .text(`${d3.format(',')(totalInRange)} vehicles`);
+      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
+        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
+        .text(`${brushedYears[0]}–${brushedYears[1]}`);
+    }
   }
 
   // All dots rendered AFTER brush so they're hoverable

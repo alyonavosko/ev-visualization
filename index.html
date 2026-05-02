@@ -447,17 +447,7 @@ function drawLineChart() {
   const brush = d3.brushX().extent([[0,0],[width,height]])
     .on('brush', event => {
       if (!event.selection) return;
-      const [x0,x1] = event.selection.map(x.invert);
-      const y0=Math.round(x0), y1=Math.round(x1);
-      const total = getTotalInRange([y0,y1]);
       g.selectAll('.brush-label').remove();
-      const mid = (event.selection[0]+event.selection[1])/2;
-      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-        .text(`${d3.format(',')(total)} vehicles`);
-      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-        .text(`${y0}–${y1}`);
     })
     .on('end', event => {
       if (!event.selection) {
@@ -485,37 +475,36 @@ function drawLineChart() {
 
     if (captureMakeLabel && brandInRange !== null) {
       // Two stacked blocks: top = total (grey bg), bottom = brand count
-      const BW = 210, BH = 44;
-      const blockY = height/2 - BH - 3;
-      const blockY2 = height/2 + 3;
-      // Top block — total (grey)
+      const blockY = height/2 - 28;
+      // Top block — total
       g.append('rect').attr('class','brush-label')
-        .attr('x', mid-BW/2).attr('y', blockY).attr('width',BW).attr('height',BH)
-        .attr('fill','rgba(180,180,180,0.28)').attr('rx',5);
+        .attr('x', mid-90).attr('y', blockY).attr('width',180).attr('height',28)
+        .attr('fill','rgba(200,200,200,0.35)').attr('rx',4);
       g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY+16).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill','#374151')
+        .attr('x',mid).attr('y',blockY+10).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('fill','#374151')
         .text(`${d3.format(',')(totalInRange)} vehicles total`);
       g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY+32).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
+        .attr('x',mid).attr('y',blockY+22).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
         .text(`${brushedYears[0]}–${brushedYears[1]}`);
-      // Bottom block — brand count (colored)
+      // Bottom block — brand count
+      const blockY2 = blockY + 28;
       g.append('rect').attr('class','brush-label')
-        .attr('x', mid-BW/2).attr('y', blockY2).attr('width',BW).attr('height',BH)
-        .attr('fill',`rgba(${hexToRgbStr(lineColor)},0.18)`).attr('rx',5);
+        .attr('x', mid-90).attr('y', blockY2).attr('width',180).attr('height',28)
+        .attr('fill',`rgba(${hexToRgbStr(lineColor)},0.15)`).attr('rx',4);
       g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY2+16).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+        .attr('x',mid).attr('y',blockY2+10).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('fill',lineColor)
         .text(`${d3.format(',')(brandInRange)} ${captureMakeLabel}`);
       g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY2+32).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
+        .attr('x',mid).attr('y',blockY2+22).attr('text-anchor','middle')
+        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
         .text(`${brushedYears[0]}–${brushedYears[1]}`);
     } else {
       // No brand selected — just show total
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('fill',lineColor)
         .text(`${d3.format(',')(totalInRange)} vehicles`);
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')

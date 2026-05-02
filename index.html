@@ -289,7 +289,7 @@ function drawBarChart() {
   barG.append('g').attr('class','grid').call(d3.axisBottom(x).ticks(4).tickSize(height).tickFormat('')).attr('transform','translate(0,0)');
   barG.append('g').attr('class','axis').attr('transform',`translate(0,${height})`).call(d3.axisBottom(x).ticks(4).tickFormat(d=>d>=1000?Math.round(d/1000)+'k':d));
   barG.append('text').attr('class','axis-label').attr('x',barWidth/2).attr('y',height+40).attr('text-anchor','middle').text('Number of Registered Vehicles');
-  svg.append('text').attr('class','axis-label').attr('transform','rotate(-90)').attr('x',-(mTop+height/2)).attr('y',12).attr('text-anchor','middle').text('Vehicle Brand');
+  svg.append('text').attr('class','axis-label').attr('transform','rotate(-90)').attr('x',-(mTop+height/2)).attr('y',-28).attr('text-anchor','middle').text('Vehicle Brand');
 
   entries.forEach(([make, count], i) => {
     const yMid = mTop+y(make)+y.bandwidth()/2;
@@ -455,7 +455,7 @@ function drawLineChart() {
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
         .text(`${d3.format(',')(total)} vehicles`);
-      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+50)
+      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
         .text(`${y0}–${y1}`);
     })
@@ -487,7 +487,7 @@ function drawLineChart() {
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
       .text(`${d3.format(',')(totalInRange)} vehicles`);
-    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+50)
+    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
       .text(`${brushedYears[0]}–${brushedYears[1]}`);
     // If brand selected, show brand info top-right of chart

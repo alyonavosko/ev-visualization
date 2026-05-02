@@ -485,7 +485,7 @@ function drawLineChart() {
 
     // Always show total in brush area
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','600').attr('fill',lineColor)
       .text(`${d3.format(',')(totalInRange)} vehicles`);
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')

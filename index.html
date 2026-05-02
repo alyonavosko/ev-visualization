@@ -71,6 +71,8 @@
     .line-path { fill: none; stroke-width: 2.5; }
     .line-dot { cursor: pointer; }
     .year-brush .selection { fill-opacity: 0.12; stroke-width: 2; }
+    .year-brush .overlay { fill: none; pointer-events: all; }
+    .year-brush .handle { display: none; }
     @keyframes barIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
     .bar-animated { animation: barIn 0.3s ease both; }
 
@@ -262,10 +264,11 @@ function drawBarChart() {
   const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12);
   const activeCol = getActiveColor();
   const {r,g,b} = hexToRgb(activeCol);
-  const LOGO_W=22, LABEL_W=80, GAP=8;
+  const LOGO_W=22, LABEL_W=44, GAP=8;
   const containerW = document.getElementById('bar-chart').offsetWidth;
   const mTop=8, mRight=120, mBottom=48;
-  const leftOffset = 16+LOGO_W+6+LABEL_W+GAP;
+  const LOGO_X = 26; // moved right, away from y-axis label
+  const leftOffset = LOGO_X+LOGO_W+4+LABEL_W+GAP;
   const barWidth = containerW-leftOffset-mRight;
   const height = 420-mTop-mBottom;
 
@@ -294,24 +297,23 @@ function drawBarChart() {
     // Logo — try local first, fall back to carlogos.org
     const localUrl = `logos/${make.toLowerCase().replace(/ /g,'-')}.png`;
     const remoteUrl = logoMap[make];
-    const logoUrl = remoteUrl || localUrl;
-    if (logoUrl) {
+    if (remoteUrl || localUrl) {
       const img = svg.append('image')
         .attr('href', localUrl)
-        .attr('x',16).attr('y',yMid-11)
+        .attr('x', LOGO_X).attr('y', yMid-11)
         .attr('width',LOGO_W).attr('height',LOGO_W)
         .attr('preserveAspectRatio','xMidYMid meet')
         .style('opacity', isActive ? 0.85 : 0.2);
-      // fallback to remote if local fails
       img.on('error', function() {
         if (remoteUrl) d3.select(this).attr('href', remoteUrl).on('error', function() { d3.select(this).remove(); });
         else d3.select(this).remove();
       });
     }
 
-    // Brand label — fixed 80px wide, clipped, 8px gap to bar
-    const LABEL_X = 16 + LOGO_W + 4;
+    // Brand label — truncated to 5 chars, 8px gap to bar
+    const LABEL_X = LOGO_X + LOGO_W + 4;
     const clipId = `clip-${i}`;
+    const shortName = make.length > 5 ? make.slice(0,5) : make;
     defs.append('clipPath').attr('id', clipId)
       .append('rect').attr('x',0).attr('y',-10).attr('width', LABEL_W).attr('height',20);
     svg.append('text')
@@ -319,7 +321,7 @@ function drawBarChart() {
       .attr('transform', `translate(${LABEL_X},${yMid})`)
       .attr('dy','0.35em')
       .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500')
-      .attr('fill', textColor).text(make);
+      .attr('fill', textColor).text(shortName);
 
     // Bar color scale: dark→light based on active type
     const t = entries.length > 1 ? i / (entries.length - 1) : 0;
@@ -337,7 +339,8 @@ function drawBarChart() {
     const cr = Math.round(darkC[0] + (lightC[0]-darkC[0])*t);
     const cg = Math.round(darkC[1] + (lightC[1]-darkC[1])*t);
     const cb = Math.round(darkC[2] + (lightC[2]-darkC[2])*t);
-    const barFill = isActive ? `rgb(${cr},${cg},${cb})` : '#e2e4e9';
+    const barFill = isActive ? `rgb(${cr},${cg},${cb})` : '#d1d5db';
+    const barOpacity = isActive ? 1 : 0.6;
 
     barG.append('rect')
       .attr('class','bar bar-animated')
@@ -345,7 +348,7 @@ function drawBarChart() {
       .attr('x',0).attr('y',y(make))
       .attr('height',y.bandwidth()).attr('rx',3)
       .attr('fill', barFill)
-      .attr('opacity', 1)
+      .attr('opacity', barOpacity)
       .attr('width', x(count))
       .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove', moveTooltip)

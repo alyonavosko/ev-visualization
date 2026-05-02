@@ -490,14 +490,6 @@ function drawLineChart() {
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
       .text(`${brushedYears[0]}–${brushedYears[1]}`);
-    // If brand selected, show brand info bottom-right of chart
-    if (captureMakeLabel && brandInRange !== null) {
-      g.append('text').attr('class','brush-label')
-        .attr('x', width - 24).attr('y', 240)
-        .attr('text-anchor','end')
-        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
-        .text(`${captureMakeLabel}: ${d3.format(',')(brandInRange)}`);
-    }
   }
 
   // All dots rendered AFTER brush so they're hoverable

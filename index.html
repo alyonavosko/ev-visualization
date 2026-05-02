@@ -98,7 +98,7 @@
       <span>Based on <a href="https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2" target="_blank">EV population data from the Washington State Department of Licensing</a></span>
     </div>
   </div>
-  <div class="filter-bar">
+  <div class="filter-bar" style="display:none">
     <span class="filter-label">Filter by type:</span>
     <button class="toggle-btn active" data-type="All">All EVs</button>
     <button class="toggle-btn" data-type="Battery Electric Vehicle (BEV)">Battery Electric (BEV)</button>
@@ -109,9 +109,9 @@
 <div class="intro-banner">
   <div class="intro-top">This dashboard visualizes <strong>electric vehicle registrations</strong> in Washington State. Explore which brands lead the market and how EV adoption has grown over time.</div>
   <div class="intro-legend">
-    <div class="legend-card"><div class="lc-header"><div class="legend-dot" style="background:#7c3aed"></div><span class="lc-title">All EVs</span></div><div class="lc-desc">Both battery electric and plug-in hybrid vehicles combined.</div></div>
-    <div class="legend-card"><div class="lc-header"><div class="legend-dot" style="background:#0d9488"></div><span class="lc-title">Battery Electric (BEV)</span></div><div class="lc-desc">Runs entirely on electricity. Charged at home or a station.</div></div>
-    <div class="legend-card"><div class="lc-header"><div class="legend-dot" style="background:#2563eb"></div><span class="lc-title">Plug-in Hybrid (PHEV)</span></div><div class="lc-desc">Has both electric motor and gas engine. Can plug in or use gas.</div></div>
+    <div class="legend-card active-card" id="card-all" data-type="All" style="cursor:pointer;border:2px solid #7c3aed;"><div class="lc-header"><div class="legend-dot" style="background:#7c3aed"></div><span class="lc-title">All EVs</span></div><div class="lc-desc">Both battery electric and plug-in hybrid vehicles combined.</div></div>
+    <div class="legend-card" id="card-bev" data-type="Battery Electric Vehicle (BEV)" style="cursor:pointer;"><div class="lc-header"><div class="legend-dot" style="background:#0d9488"></div><span class="lc-title">Battery Electric (BEV)</span></div><div class="lc-desc">Runs entirely on electricity. Charged at home or a station.</div></div>
+    <div class="legend-card" id="card-phev" data-type="Plug-in Hybrid Electric Vehicle (PHEV)" style="cursor:pointer;"><div class="lc-header"><div class="legend-dot" style="background:#2563eb"></div><span class="lc-title">Plug-in Hybrid (PHEV)</span></div><div class="lc-desc">Has both electric motor and gas engine. Can plug in or use gas.</div></div>
   </div>
 </div>
 
@@ -125,14 +125,6 @@
       <button class="reset-btn" id="reset-line">Clear selection</button>
     </div>
     <div class="panel-instruction"><span class="tip-label">Tip</span> Drag across years to filter the brands chart</div>
-      // If brand selected, show brand info bottom-right of chart
-    if (captureMakeLabel && brandInRange !== null) {
-      g.append('text').attr('class','brush-label')
-        .attr('x', width - 24).attr('y', 240)
-        .attr('text-anchor','end')
-        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
-        .text(`${captureMakeLabel}: ${d3.format(',')(brandInRange)}`);
-    }
     <div id="line-chart"></div>
     <div class="chart-footnote">* A U.S. law that offers tax credits (up to $7,500) for buying electric vehicles and funds clean energy to reduce emissions.</div>
   </div>
@@ -498,6 +490,14 @@ function drawLineChart() {
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
       .text(`${brushedYears[0]}–${brushedYears[1]}`);
+    // If brand selected, show brand info bottom-right of chart
+    if (captureMakeLabel && brandInRange !== null) {
+      g.append('text').attr('class','brush-label')
+        .attr('x', width - 24).attr('y', 240)
+        .attr('text-anchor','end')
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
+        .text(`${captureMakeLabel}: ${d3.format(',')(brandInRange)}`);
+    }
   }
 
   // All dots rendered AFTER brush so they're hoverable
@@ -533,6 +533,38 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.classList.add('active');
     activeType = btn.dataset.type;
     selectedMake=null; brushedYears=null; refreshAll();
+    updateCardStyles();
+  });
+});
+
+const cardColors = {
+  'All': '#7c3aed',
+  'Battery Electric Vehicle (BEV)': '#0d9488',
+  'Plug-in Hybrid Electric Vehicle (PHEV)': '#2563eb'
+};
+
+function updateCardStyles() {
+  document.querySelectorAll('.legend-card').forEach(card => {
+    const type = card.dataset.type;
+    if (!type) return;
+    const typeKey = type === 'All' ? 'All' : type;
+    if (activeType === typeKey) {
+      card.style.border = `2px solid ${cardColors[typeKey]}`;
+    } else {
+      card.style.border = '1px solid #e8eaf0';
+    }
+  });
+}
+
+document.querySelectorAll('.legend-card[data-type]').forEach(card => {
+  card.addEventListener('click', () => {
+    activeType = card.dataset.type;
+    // Sync toggle buttons
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === activeType);
+    });
+    selectedMake=null; brushedYears=null; refreshAll();
+    updateCardStyles();
   });
 });
 document.getElementById('reset-line').addEventListener('click', ()=>{ brushedYears=null; selectedMake=null; refreshAll(); });

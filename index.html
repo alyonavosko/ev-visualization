@@ -483,42 +483,20 @@ function drawLineChart() {
       ? getYearCounts(captureMakeLabel).filter(d=>d[0]>=brushedYears[0]&&d[0]<=brushedYears[1]).reduce((s,d)=>s+d[1],0)
       : null;
 
+    // Always show total in brush area
+    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+      .text(`${d3.format(',')(totalInRange)} vehicles`);
+    g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
+      .text(`${brushedYears[0]}–${brushedYears[1]}`);
+    // If brand selected, show brand info top-right of chart
     if (captureMakeLabel && brandInRange !== null) {
-      // Two stacked blocks: top = total (grey bg), bottom = brand count
-      const blockY = height/2 - 28;
-      // Top block — total
-      g.append('rect').attr('class','brush-label')
-        .attr('x', mid-90).attr('y', blockY).attr('width',180).attr('height',28)
-        .attr('fill','rgba(200,200,200,0.35)').attr('rx',4);
       g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY+10).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','700').attr('fill','#374151')
-        .text(`${d3.format(',')(totalInRange)} vehicles total`);
-      g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY+22).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
-        .text(`${brushedYears[0]}–${brushedYears[1]}`);
-      // Bottom block — brand count
-      const blockY2 = blockY + 28;
-      g.append('rect').attr('class','brush-label')
-        .attr('x', mid-90).attr('y', blockY2).attr('width',180).attr('height',28)
-        .attr('fill',`rgba(${hexToRgbStr(lineColor)},0.15)`).attr('rx',4);
-      g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY2+10).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor)
-        .text(`${d3.format(',')(brandInRange)} ${captureMakeLabel}`);
-      g.append('text').attr('class','brush-label')
-        .attr('x',mid).attr('y',blockY2+22).attr('text-anchor','middle')
-        .attr('font-family','Inter,sans-serif').attr('font-size','9px').attr('fill','#6b7280')
-        .text(`${brushedYears[0]}–${brushedYears[1]}`);
-    } else {
-      // No brand selected — just show total
-      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-        .text(`${d3.format(',')(totalInRange)} vehicles`);
-      g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-        .text(`${brushedYears[0]}–${brushedYears[1]}`);
+        .attr('x', width).attr('y', 12)
+        .attr('text-anchor','end')
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
+        .text(`${captureMakeLabel} ${brushedYears[0]}–${brushedYears[1]}: ${d3.format(',')(brandInRange)}`);
     }
   }
 

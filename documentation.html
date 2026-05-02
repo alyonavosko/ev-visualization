@@ -6,55 +6,47 @@
 <title>EV Visualization Documentation</title>
 
 <style>
-body {
-  font-family: "Inter", Arial, sans-serif;
-  margin: 40px auto;
-  max-width: 850px;
-  line-height: 1.8;
-  color: #1f2937;
-  background: #f9fafb;
-}
+  body {
+    font-family: "Inter", Arial, sans-serif;
+    margin: 40px auto;
+    max-width: 900px;
+    line-height: 1.7;
+    color: #1f2937;
+    background: #f9fafb;
+  }
 
-h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
+  h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
 
-h2 {
-  margin-top: 50px;
-  font-size: 20px;
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 6px;
-}
+  h2 {
+    margin-top: 40px;
+    font-size: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 5px;
+  }
 
-p {
-  margin: 14px 0;
-  font-size: 15px;
-}
+  p {
+    margin: 12px 0;
+  }
 
-ul {
-  margin: 10px 0 20px 20px;
-}
+  img {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+  }
 
-li {
-  margin-bottom: 6px;
-}
+  .video {
+    margin-top: 30px;
+    text-align: center;
+  }
 
-img {
-  width: 100%;
-  margin: 25px 0;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-}
-
-.section {
-  margin-bottom: 30px;
-}
-
-.video {
-  margin-top: 30px;
-  text-align: center;
-}
+  .note {
+    font-size: 13px;
+    color: #6b7280;
+  }
 </style>
 </head>
 
@@ -62,8 +54,8 @@ img {
 
 <h1>Electric Vehicle Visualization Documentation</h1>
 
-<p>
-Dataset:
+<p class="note">
+Dataset: 
 <a href="https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2/about_data" target="_blank">
 Washington State EV Population Data
 </a>
@@ -74,65 +66,68 @@ Washington State EV Population Data
 <h2>Design Process</h2>
 
 <p>
-The visualization was developed through an iterative process focused on improving clarity, usability, and interaction.
-Early versions included multiple charts, which made the interface visually complex and difficult to interpret.
-Users had to mentally connect different views, which increased cognitive effort.
+The visualization was developed through an iterative design process focused on improving clarity and usability. 
+Early versions included multiple charts, including a scatterplot, which made the interface visually complex and difficult to interpret. 
+Users were required to mentally connect different charts, which increased cognitive effort and reduced clarity.
 </p>
 
 <p>
-To address this, the design was simplified into two coordinated views: a timeline on the left and a ranking chart on the right.
-This structure creates a clear relationship between user action and result.
-The timeline acts as input, while the bar chart reflects the output.
+To address this, the design was simplified into two coordinated views: a timeline on the left and a ranking chart on the right. 
+This structure creates a clear relationship between user actions and results. The timeline acts as the input, while the ranking chart reflects the output. 
+This change made the visualization more intuitive and easier to use.
 </p>
 
 <p>
-Initial sketches were used to explore layout and interaction before arriving at the final design.
+Initial sketches were used to explore layout and interaction ideas before implementing the final version.
 </p>
 
-<img src="images/sketch.png" alt="Sketch">
+<!-- ADD YOUR SKETCH IMAGE -->
+<img src="images/sketch.png" alt="Initial sketch">
 
 ---
 
 <h2>Rationale of Design Choices</h2>
 
 <p>
-Color was used as a meaningful encoding system. Purple represents all electric vehicles, teal represents battery electric vehicles, and blue represents plug-in hybrid vehicles.
-These choices align with perception: teal is associated with sustainability, while blue reflects hybrid systems.
+Color was used intentionally to encode meaning. Purple represents all electric vehicles, teal represents battery electric vehicles, and blue represents plug-in hybrid vehicles. 
+These choices are based on perception. Teal is commonly associated with sustainability, while blue reflects hybrid or mixed systems. Purple acts as a neutral aggregate color.
 </p>
 
 <p>
-Inactive elements are shown in grey to reduce visual noise and improve focus.
-This creates a clear visual hierarchy and helps users quickly identify relevant data.
+Inactive elements are shown in grey to reduce visual noise and direct attention to selected data. This creates a clear visual hierarchy and improves readability.
 </p>
 
 <p>
-The interaction design uses direct manipulation. Users drag across the timeline to filter data and click on brands to explore specific trends.
-This removes the need for external controls and makes the interaction intuitive.
+The interaction design focuses on direct manipulation. Users drag across the timeline to filter data, and the bar chart updates accordingly. 
+Clicking a brand highlights it and updates the timeline to show that brand’s trend over time. This creates a clear connection between the two charts.
 </p>
 
 <p>
-Logos were added to improve recognition. Users can identify brands instantly without reading text, which reduces cognitive effort and improves scanning speed.
+Logos were added to improve usability. Instead of relying only on text labels, users can recognize brands instantly through familiar visual symbols. 
+This follows the principle that recognition is faster than recall, especially when scanning multiple items.
 </p>
 
 <p>
-A color gradient was applied to the bar chart to reinforce ranking.
-Darker colors represent higher values, while lighter colors represent lower values.
-This allows users to interpret differences visually without relying only on numbers.
+Gradients were used in the bar chart to reinforce ranking. Darker colors represent higher values, while lighter colors represent lower values. 
+This allows users to quickly understand differences without relying only on numerical values.
 </p>
 
 ---
 
 <h2>Interaction Design</h2>
 
+<p>
+The visualization supports several interactive features:
+</p>
+
 <ul>
-<li>Drag across the timeline to select a year range</li>
-<li>Bar chart updates based on selected range</li>
-<li>Click a brand to highlight and view its trend</li>
-<li>Hover to view detailed values</li>
+<li>Dragging across the timeline filters data by year range</li>
+<li>Clicking a brand highlights it and updates the timeline</li>
+<li>Hovering shows detailed values</li>
 </ul>
 
 <p>
-The bar chart is empty by default to guide users to interact with the timeline first.
+The right chart is empty by default to encourage user interaction and make the relationship between charts clear.
 </p>
 
 ---
@@ -140,7 +135,7 @@ The bar chart is empty by default to guide users to interact with the timeline f
 <h2>Annotations and Context</h2>
 
 <p>
-Annotations were added to provide context for key events:
+Annotations were added to provide context for major events:
 </p>
 
 <ul>
@@ -150,35 +145,39 @@ Annotations were added to provide context for key events:
 </ul>
 
 <p>
-These annotations help connect changes in the data to real-world events.
+These help explain changes in adoption trends and connect the data to real-world events.
 </p>
 
 ---
 
 <h2>Insights and Findings</h2>
 
+<p>
+The visualization was used to explore patterns in electric vehicle adoption and brand dominance over time.
+</p>
+
 <ul>
 <li>EV adoption increases significantly after 2017</li>
-<li>Tesla becomes dominant in recent years</li>
+<li>Tesla becomes the dominant brand in recent years</li>
 <li>Earlier years show more balanced competition</li>
-<li>Policy changes align with growth trends</li>
+<li>Policy and product releases align with growth spikes</li>
 </ul>
 
 <p>
-The timeline interaction allows comparison between time periods and reveals how brand rankings change over time.
+The timeline interaction allows comparison between different periods, revealing how brand rankings change over time.
 </p>
 
-<img src="images/insight1.png">
-<img src="images/insight2.png">
+<!-- ADD YOUR SCREENSHOTS -->
+<img src="images/insight1.png" alt="Insight 1">
+<img src="images/insight2.png" alt="Insight 2">
 
 ---
 
 <h2>Implementation Notes</h2>
 
 <p>
-The visualization was built using D3.js.
-The dataset was preprocessed into a smaller aggregated format to improve performance.
-This reduced loading time and ensured smooth interaction.
+The visualization was built using D3.js. The original dataset was large, so it was processed into a smaller aggregated JSON format. 
+This reduced loading time significantly and ensured smooth performance while preserving key trends.
 </p>
 
 ---
@@ -187,11 +186,15 @@ This reduced loading time and ensured smooth interaction.
 
 <div class="video">
 <iframe width="560" height="315"
-src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+src="https://youtu.be/WYdoEIhouZA"
 frameborder="0"
 allowfullscreen>
 </iframe>
 </div>
+
+<p>
+The video demonstrates how to interact with the visualization and highlights key insights.
+</p>
 
 </body>
 </html>

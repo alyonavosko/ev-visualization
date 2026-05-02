@@ -509,8 +509,6 @@ function drawLineChart() {
 }
 
 function refreshAll(skipLine=false) {
-  d3.select('#bar-chart').selectAll('*').remove();
-  d3.select('#line-chart').selectAll('*').remove();
   drawBarChart();
   if (!skipLine) drawLineChart();
 }

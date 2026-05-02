@@ -125,6 +125,14 @@
       <button class="reset-btn" id="reset-line">Clear selection</button>
     </div>
     <div class="panel-instruction"><span class="tip-label">Tip</span> Drag across years to filter the brands chart</div>
+      // If brand selected, show brand info bottom-right of chart
+    if (captureMakeLabel && brandInRange !== null) {
+      g.append('text').attr('class','brush-label')
+        .attr('x', width - 24).attr('y', 240)
+        .attr('text-anchor','end')
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
+        .text(`${captureMakeLabel}: ${d3.format(',')(brandInRange)}`);
+    }
     <div id="line-chart"></div>
     <div class="chart-footnote">* A U.S. law that offers tax credits (up to $7,500) for buying electric vehicles and funds clean energy to reduce emissions.</div>
   </div>

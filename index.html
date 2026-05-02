@@ -429,8 +429,16 @@ function drawLineChart() {
     g.append('path').datum(byYearMake).attr('fill','url(#areaGradMake)').attr('d',area);
     g.append('path').datum(byYearMake).attr('fill','none').attr('stroke',lineColor).attr('stroke-width',2.5).attr('d',line);
     const last = byYearMake[byYearMake.length-1];
-    g.append('text').attr('x',x(last[0])+6).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','10px').attr('font-weight','600').attr('fill',lineColor).text(selectedMake);
-    // Selected make dots — rendered LAST so they're on top
+    // Brand label with white stroke, positioned to not overflow
+    const labelX = Math.min(x(last[0])+8, width-60);
+    g.append('text').attr('x',labelX).attr('y',y(last[1])-8).attr('dy','0.35em')
+      .attr('font-size','11px').attr('font-weight','700')
+      .attr('stroke','#fff').attr('stroke-width',4).attr('paint-order','stroke')
+      .style('pointer-events','none').text(selectedMake);
+    g.append('text').attr('x',labelX).attr('y',y(last[1])-8).attr('dy','0.35em')
+      .attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor)
+      .style('pointer-events','none').text(selectedMake);
+    // Selected make dots — hoverable with year info
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
       .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
@@ -448,14 +456,12 @@ function drawLineChart() {
       const total = getTotalInRange([y0,y1]);
       g.selectAll('.brush-label').remove();
       const mid = (event.selection[0]+event.selection[1])/2;
-      const displayTotal = selectedMake ? (getYearCounts(selectedMake).filter(d=>d[0]>=y0&&d[0]<=y1).reduce((s,d)=>s+d[1],0)) : total;
-      const displayLabel = selectedMake ? `${selectedMake} · ${y0}–${y1}` : `${y0}–${y1}`;
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
-        .text(`${d3.format(',')(displayTotal)} vehicles`);
+        .text(`${d3.format(',')(total)} vehicles`);
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
-        .text(displayLabel);
+        .text(`${y0}–${y1}`);
     })
     .on('end', event => {
       if (!event.selection) {

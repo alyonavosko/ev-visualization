@@ -352,6 +352,7 @@ function drawBarChart() {
       .attr('x',0).attr('y',y(make))
       .attr('height',y.bandwidth()).attr('rx',3)
       .attr('fill', barFill)
+      .style('opacity', hasSelection && !isSelected ? 0.5 : 1)
       .attr('width', x(count))
       .on('mouseover', e => showTooltip(e, `<strong>${make}</strong>${d3.format(',')(count)} vehicles · ${((count/total)*100).toFixed(1)}% of total`))
       .on('mousemove', moveTooltip)

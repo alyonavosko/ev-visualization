@@ -453,7 +453,7 @@ function drawLineChart() {
       g.selectAll('.brush-label').remove();
       const mid = (event.selection[0]+event.selection[1])/2;
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','700').attr('fill',lineColor)
+        .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','500').attr('fill',lineColor)
         .text(`${d3.format(',')(total)} vehicles`);
       g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
         .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
@@ -485,7 +485,7 @@ function drawLineChart() {
 
     // Always show total in brush area
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2-10)
-      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','600').attr('fill',lineColor)
+      .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','13px').attr('font-weight','500').attr('fill',lineColor)
       .text(`${d3.format(',')(totalInRange)} vehicles`);
     g.append('text').attr('class','brush-label').attr('x',mid).attr('y',height/2+10)
       .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
@@ -495,7 +495,7 @@ function drawLineChart() {
       g.append('text').attr('class','brush-label')
         .attr('x', width).attr('y', 200)
         .attr('text-anchor','end')
-        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
+        .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','500').attr('fill',lineColor)
         .text(`${captureMakeLabel}: ${d3.format(',')(brandInRange)}`);
     }
   }

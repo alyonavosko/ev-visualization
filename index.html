@@ -457,7 +457,7 @@ function drawLineChart() {
         const [x0,x1]=event.selection.map(x.invert);
         brushedYears=[Math.round(x0),Math.round(x1)];
       }
-      refreshAll(true);
+      refreshAll();
     });
   const brushG = g.append('g').attr('class','year-brush').call(brush);
   brushG.select('.selection').style('fill',lineColor).style('stroke',lineColor);

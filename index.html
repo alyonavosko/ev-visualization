@@ -73,7 +73,7 @@
     .year-brush .selection { fill-opacity: 0.12; stroke-width: 2; }
     .year-brush .overlay { fill: none; pointer-events: all; stroke: none !important; outline: none !important; }
     .year-brush .handle { display: none; }
-    .year-brush rect { outline: none !important; border: none !important; stroke: none !important; }
+    .year-brush rect { outline: none !important; border: none !important; }
     @keyframes barIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
     .bar-animated { animation: barIn 0.3s ease both; }
 
@@ -431,18 +431,13 @@ function drawLineChart() {
     g.append('path').datum(byYearMake).attr('fill','url(#areaGradMake)').attr('d',area);
     g.append('path').datum(byYearMake).attr('fill','none').attr('stroke',lineColor).attr('stroke-width',2.5).attr('d',line);
     const last = byYearMake[byYearMake.length-1];
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em')
-      .attr('font-size','11px').attr('font-weight','700')
-      .attr('stroke','#fff').attr('stroke-width',4).attr('stroke-linejoin','round')
-      .attr('paint-order','stroke').style('pointer-events','none').text(selectedMake);
-    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em')
-      .attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor)
-      .style('pointer-events','none').text(selectedMake);
+    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','11px').attr('font-weight','700').attr('stroke','#fff').attr('stroke-width',4).attr('paint-order','stroke').style('pointer-events','none').text(selectedMake);
+    g.append('text').attr('x',x(last[0])+8).attr('y',y(last[1])).attr('dy','0.35em').attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor).style('pointer-events','none').text(selectedMake);
     // Selected make dots — rendered LAST so they're on top
     g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
       .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
       .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
-      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake}</strong>${d3.format(',')(d[1])} vehicles in ${d[0]}`);}
+      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake}</strong>${d3.format(',')(d[1])} vehicles in ${d[0]}`);})
       .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
   }
 

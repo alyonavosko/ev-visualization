@@ -506,7 +506,7 @@ function drawLineChart() {
     .attr('fill', selectedMake ? '#d1d5db' : lineColor)
     .attr('stroke','#fff').attr('stroke-width', selectedMake ? 1 : 1.5)
     .style('pointer-events','all').style('cursor','pointer')
-    .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${d3.format(',')(d[total vehicles`);};})
+    .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${d3.format(',')(d[1])} total vehicles`);})
     .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
 }
 

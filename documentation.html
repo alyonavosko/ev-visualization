@@ -20,6 +20,15 @@
   img {
     width: 100%;
     margin: 20px 0;
+    border: 1px solid #ddd;
+  }
+
+  .caption {
+    font-size: 13px;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 20px;
   }
 
   .video {
@@ -40,10 +49,20 @@ Washington State EV Population Data
 </a>
 </p>
 
+<p>
+Visualization: 
+<a href="https://alyonavosko.github.io/ev-visualization/" target="_blank">
+https://alyonavosko.github.io/ev-visualization/
+</a>
+</p>
+
 <h2>Design Process</h2>
 <p>The visualization was developed through a deliberate and iterative process with the primary goal of improving clarity, usability, and interpretability. Early versions included additional charts and more complex layouts. While these versions displayed more data, they created confusion and made it difficult to understand how different components related to each other. The design was therefore simplified to two coordinated views: a timeline on the left and a ranking chart on the right.</p>
 
 <p>This structural decision was intentional. The timeline acts as the primary control, while the ranking chart reflects the result of that interaction. This creates a clear and logical relationship between actions and outcomes. Users select a time range and immediately see how brand rankings change. This approach reduces ambiguity and ensures that the interface communicates its purpose without requiring extensive instructions.</p>
+
+<img src="images/view1.png">
+<p class="caption">two coordinated views: a timeline on the left and a ranking chart on the right.</p>
 
 <h2>Early Design Exploration</h2>
 <p>At the beginning of the project, I explored a more complex layout that included three charts: a bar chart, a line chart, and a scatter plot. The goal was to show relationships between vehicle range, time, and brand distribution simultaneously. However, this approach introduced too much visual complexity and made it difficult to understand how the charts were connected.</p>
@@ -52,7 +71,8 @@ Washington State EV Population Data
 
 <p>Initial sketches were used to explore layout options and interaction flow. These sketches helped guide the transition from a multi-chart layout to a more structured and intuitive design.</p>
 
-<img src="images/sketch.png" alt="Sketch">
+<img src="images/sketch1.png">
+<p class="caption">Removed scatter plot view</p>
 
 <h2>Interaction Design</h2>
 <p>The interaction model was designed to be direct and intuitive. Instead of relying on external controls such as dropdown menus, the visualization uses actions that are embedded directly within the charts. Users drag across the timeline to define a time range. This interaction updates the ranking chart in real time.</p>
@@ -60,6 +80,9 @@ Washington State EV Population Data
 <p>The decision to leave the ranking chart empty by default reinforces this relationship. It signals that the user must first make a selection. This avoids presenting information without context and encourages active exploration.</p>
 
 <p>Single-selection behavior was implemented in the ranking chart to maintain clarity. When a user selects a brand, that brand becomes the focal point. All other brands are visually de-emphasized using a neutral grey color. This ensures that attention is directed toward the selected data while still preserving context. The interaction is reversible, which allows users to explore multiple brands without losing their place.</p>
+
+<img src="images/view2.png">
+<p class="caption">ranking chart</p>
 
 <h2>Color System and Visual Encoding</h2>
 <p>Color was treated as a primary encoding mechanism rather than a decorative element. A strict and consistent color mapping was established across the visualization.</p>
@@ -69,6 +92,15 @@ Washington State EV Population Data
 <p>Inactive elements are shown in grey. This prevents unnecessary visual competition and ensures that active data stands out clearly. The consistent use of grey for inactive states improves visual hierarchy and reduces cognitive load.</p>
 
 <p>A gradient scale was applied to the ranking chart to reinforce differences in magnitude. Higher values are represented with darker shades, while lower values are represented with lighter shades. This allows users to quickly interpret ranking without relying solely on numeric labels. The gradient supports rapid visual comparison and improves scanning efficiency.</p>
+
+<img src="images/color-purple.png">
+<p class="caption">All EVs (aggregate)</p>
+
+<img src="images/color-teal.png">
+<p class="caption">Battery Electric Vehicles (BEV)</p>
+
+<img src="images/color-blue.png">
+<p class="caption">Plug-in Hybrid Vehicles (PHEV)</p>
 
 <h2>Layout and Readability</h2>
 <p>Significant attention was given to layout, spacing, and alignment. The goal was to eliminate visual clutter and ensure that all elements are easy to read and interpret.</p>
@@ -84,12 +116,18 @@ Washington State EV Population Data
 
 <p>Logos were carefully sized and positioned to maintain consistency. Each logo is constrained to a fixed maximum width to ensure uniform appearance across brands. Spacing between logos, labels, and bars was adjusted to prevent overlap and maintain clarity.</p>
 
+<img src="images/logos.png">
+<p class="caption">Brand logos improve recognition and reduce the need for reading labels</p>
+
 <h2>Annotations and Context</h2>
 <p>Annotations were added to provide context for key changes in the data. Without contextual information, the visualization shows trends but does not explain their causes.</p>
 
 <p>Three major events were highlighted. The introduction of early electric vehicles in 2010 marks the beginning of adoption. The release of the Tesla Model 3 in 2017 represents a significant shift in the market. The Inflation Reduction Act in 2022 reflects the impact of policy on adoption.</p>
 
 <p>These annotations allow users to connect patterns in the data to real-world events. This enhances the analytical value of the visualization and supports deeper understanding.</p>
+
+<img src="images/annotations.png">
+<p class="caption">Annotations connect trends in the data to real-world events</p>
 
 <h2>Micro-Level UX Improvements</h2>
 <p>A large number of smaller refinements were implemented to improve overall usability. These changes focus on reducing friction and improving clarity during interaction.</p>
@@ -99,14 +137,20 @@ Washington State EV Population Data
 <p>The highlighted time range displays the total number of vehicles within the selected period. This information remains visible after selection, which eliminates the need for repeated interaction and supports better interpretation.</p>
 
 <h2>Insights and Findings</h2>
+
 <p>The visualization was used to explore how electric vehicle adoption has evolved over time and which brands dominate the market during different periods.</p>
 
 <ul>
 <li>Electric vehicle adoption remained relatively low until around 2017, after which growth increased significantly</li>
 <li>Tesla becomes the dominant brand in recent years, particularly after 2018</li>
 <li>Earlier years show a more balanced distribution across brands, while later years show strong market concentration</li>
-<li>Policy changes and major product releases appear to align with increases in adoption</li>
+<li>A major shift occurs after 2022, where total registrations nearly double from 2022 to 2023</li>
+<li>This increase aligns with the Inflation Reduction Act, suggesting that policy incentives had a measurable impact</li>
 </ul>
+
+<p>The brushing interaction allows comparison between different time periods. By selecting earlier years, users can observe a more competitive market, while selecting recent years reveals strong dominance by a few brands.</p>
+
+<p>Clicking a specific brand allows further analysis by showing its trend over time compared to the overall market, making it possible to understand both market leadership and growth patterns.</p>
 
 <img src="images/insight1.png">
 <img src="images/insight2.png">

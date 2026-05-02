@@ -429,7 +429,6 @@ function drawLineChart() {
     g.append('path').datum(byYearMake).attr('fill','url(#areaGradMake)').attr('d',area);
     g.append('path').datum(byYearMake).attr('fill','none').attr('stroke',lineColor).attr('stroke-width',2.5).attr('d',line);
     const last = byYearMake[byYearMake.length-1];
-    // Brand label with white stroke, positioned to not overflow
     const labelX = Math.min(x(last[0])+8, width-60);
     g.append('text').attr('x',labelX).attr('y',y(last[1])-8).attr('dy','0.35em')
       .attr('font-size','11px').attr('font-weight','700')
@@ -438,16 +437,9 @@ function drawLineChart() {
     g.append('text').attr('x',labelX).attr('y',y(last[1])-8).attr('dy','0.35em')
       .attr('font-size','11px').attr('font-weight','700').attr('fill',lineColor)
       .style('pointer-events','none').text(selectedMake);
-    // Selected make dots — hoverable with year info
-    g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
-      .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',5)
-      .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2).style('pointer-events','all').style('cursor','pointer')
-      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake} · ${d[0]}</strong>${d3.format(',')(d[1])} vehicles`);})
-      .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
   }
 
-  // All-brands dots — rendered after brush but before make dots only when no make selected
-  // Brush first
+  // Brush rendered BEFORE dots so dots sit on top and are hoverable
   const brush = d3.brushX().extent([[0,0],[width,height]])
     .on('brush', event => {
       if (!event.selection) return;
@@ -502,6 +494,16 @@ function drawLineChart() {
     .style('pointer-events','all').style('cursor','pointer')
     .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${d[0]}</strong>${d3.format(',')(d[1])} total vehicles`);})
     .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
+
+  // Make-dots rendered LAST — on top of everything including brush
+  if (byYearMake && byYearMake.length>0) {
+    g.selectAll('.make-dot').data(byYearMake).enter().append('circle')
+      .attr('class','line-dot make-dot').attr('cx',d=>x(d[0])).attr('cy',d=>y(d[1])).attr('r',6)
+      .attr('fill',lineColor).attr('stroke','#fff').attr('stroke-width',2)
+      .style('pointer-events','all').style('cursor','pointer')
+      .on('mouseover',(e,d)=>{e.stopPropagation();showTooltip(e,`<strong>${selectedMake} · ${d[0]}</strong>${d3.format(',')(d[1])} vehicles`);})
+      .on('mousemove',e=>{e.stopPropagation();moveTooltip(e);}).on('mouseout',hideTooltip);
+  }
 }
 
 function refreshAll(skipLine=false) {

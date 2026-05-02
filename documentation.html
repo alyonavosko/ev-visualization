@@ -7,45 +7,24 @@
 
 <style>
   body {
-    font-family: "Inter", Arial, sans-serif;
+    font-family: Arial, sans-serif;
     margin: 40px auto;
     max-width: 900px;
     line-height: 1.7;
     color: #1f2937;
-    background: #f9fafb;
   }
 
-  h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-
-  h2 {
-    margin-top: 40px;
-    font-size: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 5px;
-  }
-
-  p {
-    margin: 12px 0;
-  }
+  h1 { font-size: 28px; }
+  h2 { margin-top: 40px; }
 
   img {
     width: 100%;
     margin: 20px 0;
-    border-radius: 6px;
-    border: 1px solid #e5e7eb;
   }
 
   .video {
     margin-top: 30px;
     text-align: center;
-  }
-
-  .note {
-    font-size: 13px;
-    color: #6b7280;
   }
 </style>
 </head>
@@ -54,147 +33,99 @@
 
 <h1>Electric Vehicle Visualization Documentation</h1>
 
-<p class="note">
+<p>
 Dataset: 
 <a href="https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2/about_data" target="_blank">
 Washington State EV Population Data
 </a>
 </p>
 
----
-
 <h2>Design Process</h2>
+<p>The visualization was developed through a deliberate and iterative process with the primary goal of improving clarity, usability, and interpretability. Early versions included additional charts and more complex layouts. While these versions displayed more data, they created confusion and made it difficult to understand how different components related to each other. The design was therefore simplified to two coordinated views: a timeline on the left and a ranking chart on the right.</p>
 
-<p>
-The visualization was developed through an iterative design process focused on improving clarity and usability. 
-Early versions included multiple charts, including a scatterplot, which made the interface visually complex and difficult to interpret. 
-Users were required to mentally connect different charts, which increased cognitive effort and reduced clarity.
-</p>
+<p>This structural decision was intentional. The timeline acts as the primary control, while the ranking chart reflects the result of that interaction. This creates a clear and logical relationship between actions and outcomes. Users select a time range and immediately see how brand rankings change. This approach reduces ambiguity and ensures that the interface communicates its purpose without requiring extensive instructions.</p>
 
-<p>
-To address this, the design was simplified into two coordinated views: a timeline on the left and a ranking chart on the right. 
-This structure creates a clear relationship between user actions and results. The timeline acts as the input, while the ranking chart reflects the output. 
-This change made the visualization more intuitive and easier to use.
-</p>
+<h2>Early Design Exploration</h2>
+<p>At the beginning of the project, I explored a more complex layout that included three charts: a bar chart, a line chart, and a scatter plot. The goal was to show relationships between vehicle range, time, and brand distribution simultaneously. However, this approach introduced too much visual complexity and made it difficult to understand how the charts were connected.</p>
 
-<p>
-Initial sketches were used to explore layout and interaction ideas before implementing the final version.
-</p>
+<p>Through testing and iteration, it became clear that users did not immediately understand how to interact with the visualization or where to focus their attention. As a result, the design was simplified to two coordinated views. This allowed for a clearer interaction model and a more focused analytical experience.</p>
 
-<!-- ADD YOUR SKETCH IMAGE -->
-<img src="images/sketch.png" alt="Initial sketch">
+<p>Initial sketches were used to explore layout options and interaction flow. These sketches helped guide the transition from a multi-chart layout to a more structured and intuitive design.</p>
 
----
-
-<h2>Rationale of Design Choices</h2>
-
-<p>
-Color was used intentionally to encode meaning. Purple represents all electric vehicles, teal represents battery electric vehicles, and blue represents plug-in hybrid vehicles. 
-These choices are based on perception. Teal is commonly associated with sustainability, while blue reflects hybrid or mixed systems. Purple acts as a neutral aggregate color.
-</p>
-
-<p>
-Inactive elements are shown in grey to reduce visual noise and direct attention to selected data. This creates a clear visual hierarchy and improves readability.
-</p>
-
-<p>
-The interaction design focuses on direct manipulation. Users drag across the timeline to filter data, and the bar chart updates accordingly. 
-Clicking a brand highlights it and updates the timeline to show that brand’s trend over time. This creates a clear connection between the two charts.
-</p>
-
-<p>
-Logos were added to improve usability. Instead of relying only on text labels, users can recognize brands instantly through familiar visual symbols. 
-This follows the principle that recognition is faster than recall, especially when scanning multiple items.
-</p>
-
-<p>
-Gradients were used in the bar chart to reinforce ranking. Darker colors represent higher values, while lighter colors represent lower values. 
-This allows users to quickly understand differences without relying only on numerical values.
-</p>
-
----
+<img src="images/sketch.png" alt="Sketch">
 
 <h2>Interaction Design</h2>
+<p>The interaction model was designed to be direct and intuitive. Instead of relying on external controls such as dropdown menus, the visualization uses actions that are embedded directly within the charts. Users drag across the timeline to define a time range. This interaction updates the ranking chart in real time.</p>
 
-<p>
-The visualization supports several interactive features:
-</p>
+<p>The decision to leave the ranking chart empty by default reinforces this relationship. It signals that the user must first make a selection. This avoids presenting information without context and encourages active exploration.</p>
 
-<ul>
-<li>Dragging across the timeline filters data by year range</li>
-<li>Clicking a brand highlights it and updates the timeline</li>
-<li>Hovering shows detailed values</li>
-</ul>
+<p>Single-selection behavior was implemented in the ranking chart to maintain clarity. When a user selects a brand, that brand becomes the focal point. All other brands are visually de-emphasized using a neutral grey color. This ensures that attention is directed toward the selected data while still preserving context. The interaction is reversible, which allows users to explore multiple brands without losing their place.</p>
 
-<p>
-The right chart is empty by default to encourage user interaction and make the relationship between charts clear.
-</p>
+<h2>Color System and Visual Encoding</h2>
+<p>Color was treated as a primary encoding mechanism rather than a decorative element. A strict and consistent color mapping was established across the visualization.</p>
 
----
+<p>Purple represents all electric vehicles as an aggregate category. This color functions as a neutral reference point. Teal represents battery electric vehicles. This choice aligns with common associations between green-blue tones and sustainability. Blue represents plug-in hybrid vehicles. This reflects the dual nature of hybrid systems and aligns with common technological associations.</p>
+
+<p>Inactive elements are shown in grey. This prevents unnecessary visual competition and ensures that active data stands out clearly. The consistent use of grey for inactive states improves visual hierarchy and reduces cognitive load.</p>
+
+<p>A gradient scale was applied to the ranking chart to reinforce differences in magnitude. Higher values are represented with darker shades, while lower values are represented with lighter shades. This allows users to quickly interpret ranking without relying solely on numeric labels. The gradient supports rapid visual comparison and improves scanning efficiency.</p>
+
+<h2>Layout and Readability</h2>
+<p>Significant attention was given to layout, spacing, and alignment. The goal was to eliminate visual clutter and ensure that all elements are easy to read and interpret.</p>
+
+<p>The bars in the ranking chart were intentionally shifted to the right to create sufficient space for labels and logos. Fixed-width label areas were introduced to maintain consistent alignment. This prevents text from overlapping with other elements and ensures a clean visual structure.</p>
+
+<p>Typography was adjusted to improve readability. Axis labels were added and scaled appropriately to ensure that users can interpret the data without difficulty. Margins were standardized across both charts to create visual balance. These adjustments may appear minor individually, but collectively they contribute to a more polished and professional presentation.</p>
+
+<h2>Use of Logos</h2>
+<p>Brand logos were incorporated to improve recognition and usability. This decision is based on a well-established principle in user experience design: recognition is faster and more efficient than recall.</p>
+
+<p>Text labels require users to read and process information. Logos provide immediate visual identification. This is particularly valuable in a ranking chart where users need to scan and compare multiple items quickly. The inclusion of logos reduces cognitive effort and improves interaction speed.</p>
+
+<p>Logos were carefully sized and positioned to maintain consistency. Each logo is constrained to a fixed maximum width to ensure uniform appearance across brands. Spacing between logos, labels, and bars was adjusted to prevent overlap and maintain clarity.</p>
 
 <h2>Annotations and Context</h2>
+<p>Annotations were added to provide context for key changes in the data. Without contextual information, the visualization shows trends but does not explain their causes.</p>
 
-<p>
-Annotations were added to provide context for major events:
-</p>
+<p>Three major events were highlighted. The introduction of early electric vehicles in 2010 marks the beginning of adoption. The release of the Tesla Model 3 in 2017 represents a significant shift in the market. The Inflation Reduction Act in 2022 reflects the impact of policy on adoption.</p>
 
-<ul>
-<li>2010: Nissan Leaf and Chevy Volt launch</li>
-<li>2017: Tesla Model 3 release</li>
-<li>2022: Inflation Reduction Act</li>
-</ul>
+<p>These annotations allow users to connect patterns in the data to real-world events. This enhances the analytical value of the visualization and supports deeper understanding.</p>
 
-<p>
-These help explain changes in adoption trends and connect the data to real-world events.
-</p>
+<h2>Micro-Level UX Improvements</h2>
+<p>A large number of smaller refinements were implemented to improve overall usability. These changes focus on reducing friction and improving clarity during interaction.</p>
 
----
+<p>Spacing between elements was adjusted to prevent overlap and improve readability. Label alignment was standardized to create a consistent structure. Hover interactions were refined to ensure that tooltips appear reliably across all data points. Selection feedback was made persistent so that users can clearly understand the current state of the visualization.</p>
+
+<p>The highlighted time range displays the total number of vehicles within the selected period. This information remains visible after selection, which eliminates the need for repeated interaction and supports better interpretation.</p>
 
 <h2>Insights and Findings</h2>
-
-<p>
-The visualization was used to explore patterns in electric vehicle adoption and brand dominance over time.
-</p>
+<p>The visualization was used to explore how electric vehicle adoption has evolved over time and which brands dominate the market during different periods.</p>
 
 <ul>
-<li>EV adoption increases significantly after 2017</li>
-<li>Tesla becomes the dominant brand in recent years</li>
-<li>Earlier years show more balanced competition</li>
-<li>Policy and product releases align with growth spikes</li>
+<li>Electric vehicle adoption remained relatively low until around 2017, after which growth increased significantly</li>
+<li>Tesla becomes the dominant brand in recent years, particularly after 2018</li>
+<li>Earlier years show a more balanced distribution across brands, while later years show strong market concentration</li>
+<li>Policy changes and major product releases appear to align with increases in adoption</li>
 </ul>
 
-<p>
-The timeline interaction allows comparison between different periods, revealing how brand rankings change over time.
-</p>
+<img src="images/insight1.png">
+<img src="images/insight2.png">
 
-<!-- ADD YOUR SCREENSHOTS -->
-<img src="images/insight1.png" alt="Insight 1">
-<img src="images/insight2.png" alt="Insight 2">
+<h2>Outcome</h2>
+<p>The final visualization emphasizes clarity, consistency, and usability. Each design decision supports the goal of making the data easier to understand and explore.</p>
 
----
+<p>The interaction flow is clear and predictable. The color system is meaningful and consistent. The layout supports readability and reduces visual clutter. Logos and annotations enhance recognition and context.</p>
 
-<h2>Implementation Notes</h2>
-
-<p>
-The visualization was built using D3.js. The original dataset was large, so it was processed into a smaller aggregated JSON format. 
-This reduced loading time significantly and ensured smooth performance while preserving key trends.
-</p>
-
----
+<p>As a result, the visualization allows users to quickly identify patterns, compare brands, and understand how the electric vehicle market has evolved over time.</p>
 
 <h2>Demo Video</h2>
 
 <div class="video">
 <iframe width="560" height="315"
-src="https://youtu.be/WYdoEIhouZA"
+src="https://www.youtube.com/embed/WYdoEIhouZA"
 frameborder="0"
-allowfullscreen>
-</iframe>
+allowfullscreen></iframe>
 </div>
-
-<p>
-The video demonstrates how to interact with the visualization and highlights key insights.
-</p>
 
 </body>
 </html>

@@ -479,7 +479,7 @@ function drawLineChart() {
           .attr('text-anchor','middle').attr('font-family','Inter,sans-serif').attr('font-size','10px').attr('fill','#6b7280')
           .text(`${brushedYears[0]}–${brushedYears[1]}`);
       }
-      selectedMake=null; refreshAll(true);
+      selectedMake=null; refreshAll();
     });
   const brushG = g.append('g').attr('class','year-brush').call(brush);
   brushG.select('.selection').style('fill',lineColor).style('stroke',lineColor);

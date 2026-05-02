@@ -71,8 +71,9 @@
     .line-path { fill: none; stroke-width: 2.5; }
     .line-dot { cursor: pointer; }
     .year-brush .selection { fill-opacity: 0.12; stroke-width: 2; }
-    .year-brush .overlay { fill: none; pointer-events: all; }
+    .year-brush .overlay { fill: none; pointer-events: all; stroke: none !important; outline: none !important; }
     .year-brush .handle { display: none; }
+    .year-brush rect { outline: none !important; border: none !important; }
     @keyframes barIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
     .bar-animated { animation: barIn 0.3s ease both; }
 
@@ -478,6 +479,7 @@ function drawLineChart() {
     });
   const brushG = g.append('g').attr('class','year-brush').call(brush);
   brushG.select('.selection').style('fill',lineColor).style('stroke',lineColor);
+  brushG.select('.overlay').style('stroke','none').style('outline','none');
   if (brushedYears) {
     brushG.call(brush.move,[x(brushedYears[0]),x(brushedYears[1])]);
     // Always show label when a selection exists

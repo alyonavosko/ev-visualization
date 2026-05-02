@@ -493,7 +493,7 @@ function drawLineChart() {
     // If brand selected, show brand info top-right of chart
     if (captureMakeLabel && brandInRange !== null) {
       g.append('text').attr('class','brush-label')
-        .attr('x', width).attr('y', 112)
+        .attr('x', width).attr('y', 240)
         .attr('text-anchor','end')
         .attr('font-family','Inter,sans-serif').attr('font-size','11px').attr('font-weight','600').attr('fill',lineColor)
         .text(`${captureMakeLabel} ${brushedYears[0]}–${brushedYears[1]}: ${d3.format(',')(brandInRange)}`);
